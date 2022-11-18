@@ -30,7 +30,7 @@ fi
 # TODO:
 # - create a new lxc instance
 echo "Creating container $INSTANCE_NAME..."
-INSTANCE=$(lxc launch ubuntu:20.04 $INSTANCE_NAME 2>&1 > /dev/null)
+INSTANCE=$(lxc launch images:ubuntu/20.04 $INSTANCE_NAME 2>&1 > /dev/null)
 echo $INSTANCE
 
 # TODO:
@@ -52,5 +52,9 @@ lxc config set $INSTANCE_NAME security.nesting=true security.syscalls.intercept.
 sleep 1
 
 echo "Restarting ${INSTANCE_NAME}"
+lxc restart $INSTANCE_NAME
 sleep 1
 
+# flushed the FORWARD table and changed default policy to ACCEPT
+sudo iptables -F FORWARD
+sudo iptables -P FORWARD ACCEPT
